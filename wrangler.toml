@@ -1,0 +1,8 @@
+name = "majestic-mcp"
+main = "src/index.ts"
+compatibility_date = "2025-01-29"
+compatibility_flags = ["nodejs_compat"]
+
+# Majestic API key - set via wrangler secret put MAJESTIC_API_KEY
+# [vars]
+# MAJESTIC_API_KEY = ""
