@@ -1,31 +1,37 @@
 {
   "name": "majestic-mcp",
-  "version": "1.0.0",
-  "description": "MCP server for Majestic SEO API on Cloudflare Workers",
-  "main": "src/index.ts",
+  "version": "1.1.0",
+  "description": "MCP server for Majestic SEO API - Trust Flow, Citation Flow, backlinks and more",
+  "main": "dist/index.js",
+  "bin": {
+    "majestic-mcp": "dist/index.js"
+  },
   "scripts": {
-    "dev": "wrangler dev",
-    "deploy": "wrangler deploy",
-    "cf-typegen": "wrangler types"
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc && node dist/index.js",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "mcp",
     "majestic",
     "seo",
     "backlinks",
-    "cloudflare-workers"
+    "trust-flow",
+    "citation-flow"
   ],
   "author": "backlink-eldorado",
   "license": "MIT",
   "type": "module",
-  "devDependencies": {
-    "@cloudflare/workers-types": "^4.20250124.0",
-    "typescript": "^5.7.3",
-    "wrangler": "^3.105.0"
+  "engines": {
+    "node": ">=18"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.4.1",
-    "agents": "^0.0.74",
-    "zod": "^3.25.76"
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.1",
+    "typescript": "^5.7.3"
   }
 }

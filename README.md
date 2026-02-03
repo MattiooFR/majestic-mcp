@@ -1,10 +1,10 @@
 # Majestic MCP Server
 
-A [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server for the [Majestic SEO API](https://majestic.com/), built to run on Cloudflare Workers.
+A [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server for the [Majestic SEO API](https://majestic.com/). Runs locally via stdio transport.
 
 ## Features
 
-This MCP server provides 9 tools to interact with Majestic's SEO data:
+9 tools to interact with Majestic's SEO data:
 
 | Tool | Description |
 |------|-------------|
@@ -22,63 +22,61 @@ This MCP server provides 9 tools to interact with Majestic's SEO data:
 
 - A [Majestic API key](https://majestic.com/account/api) (requires a Majestic subscription)
 - Node.js 18+
-- Cloudflare account (for deployment)
 
 ## Quick Start
 
-### 1. Clone and install
+### With npx (no install)
 
 ```bash
-git clone https://github.com/backlink-eldorado/majestic-mcp.git
-cd majestic-mcp
-npm install
+MAJESTIC_API_KEY=your-key npx majestic-mcp
 ```
 
-### 2. Set your API key
+### Global install
 
 ```bash
-# For local development
-echo 'MAJESTIC_API_KEY="your-api-key-here"' > .dev.vars
-
-# For production deployment
-npx wrangler secret put MAJESTIC_API_KEY
+npm install -g majestic-mcp
+MAJESTIC_API_KEY=your-key majestic-mcp
 ```
 
-### 3. Run locally
+## MCP Configuration
 
-```bash
-npm run dev
-```
+### For mcporter / OpenClaw
 
-The server will start at `http://localhost:8787`
-
-### 4. Deploy to Cloudflare
-
-```bash
-npm run deploy
-```
-
-## Usage
-
-### Endpoints
-
-- `GET /` - Server info and available tools
-- `POST /mcp` - MCP Streamable HTTP endpoint
-- `GET /sse` - MCP SSE endpoint (for clients that prefer SSE)
-
-### With mcporter
-
-Add to your `mcporter.json`:
+Add to `.mcp.json`:
 
 ```json
 {
-  "majestic": {
-    "url": "https://your-worker.your-subdomain.workers.dev/mcp"
+  "mcpServers": {
+    "majestic": {
+      "command": "npx",
+      "args": ["-y", "majestic-mcp"],
+      "env": {
+        "MAJESTIC_API_KEY": "your-api-key-here"
+      }
+    }
   }
 }
 ```
 
-Then use:
+### For Claude Desktop
+
+Add to Claude Desktop config:
+
+```json
+{
+  "mcpServers": {
+    "majestic": {
+      "command": "npx",
+      "args": ["-y", "majestic-mcp"],
+      "env": {
+        "MAJESTIC_API_KEY": "your-api-key-here"
+      }
+    }
+  }
+}
+```
+
+## Usage with mcporter
 
 ```bash
 # Get Trust Flow and Citation Flow for a domain
@@ -89,20 +87,9 @@ mcporter call majestic.get_backlinks item="example.com" count=50
 
 # Compare domains
 mcporter call majestic.compare_items items='["site1.com","site2.com","site3.com"]'
-```
 
-### With Claude Desktop
-
-Add to your Claude Desktop config:
-
-```json
-{
-  "mcpServers": {
-    "majestic": {
-      "url": "https://your-worker.your-subdomain.workers.dev/sse"
-    }
-  }
-}
+# Check API quota
+mcporter call majestic.get_subscription_info
 ```
 
 ## API Reference
@@ -205,7 +192,3 @@ Check API usage (no parameters).
 ## License
 
 MIT
-
-## Contributing
-
-PRs welcome! Please open an issue first to discuss major changes.
